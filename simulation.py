@@ -2,6 +2,7 @@ from genericpath import exists
 import cv2
 import requests
 import time as sleep
+import socket
 import numpy as np
 
 def play_video(num):
@@ -23,8 +24,8 @@ def play_video(num):
             height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT )
 
             # print(frame_no)
-            # if(frame_no==364):
-            #     send_request(num)
+            if(frame_no==364):
+                send_request(num)
             # cv2.namedWindow("test", cv2.WND_PROP_FULLSCREEN)          
             # cv2.setWindowProperty("test", cv2.WND_PROP_FULLSCREEN, cv2.CV_WINDOW_FULLSCREEN)
             # winname = "Test"
@@ -44,8 +45,18 @@ def send_request(num):
         requests.post('https://192.168.1.9:5000/health')
         # print("detouring")
     elif num==2:
-        requests.post('http://192.168.1.9:5000/low_alertness')
-        print("sending sleepy signal")
+        requests.post('http://192.168.1.9:5000/detournow', data={'detour':'yes'})
+        # print("sending sleepy signal")
+        
+        
+        ################send the data#############################
+        # byte_message = bytes("f", "utf-8")
+        # opened_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # opened_socket.sendto(byte_message, ("172.20.10.2", 6997))
+        ##########################################
+        # data=opened_socket.recvfrom(1024) 
+        # print(data)
+        print("sending port")
     elif num==3:
         requests.post('https://192.168.1.9:5000/anixety')
     elif num==4:
@@ -68,6 +79,7 @@ while(1):
         run_sim(1)
     elif(choice == "2"):
         run_sim(2)
+        #send_request(2)
     elif(choice == "3"):
         run_sim(3)
     elif(choice == "4"):
